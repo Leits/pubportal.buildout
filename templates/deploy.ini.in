@@ -6,7 +6,16 @@ threadpool_workers = ${:workers}
 threadpool_spawn_if_under = ${:spawn_if_under}
 threadpool_max_requests = ${:max_requests}
 
-[app:main]
+[composite:main]
+use = egg:Paste#urlmap
+/app = flask
+/= kibana
+
+[app:kibana]
+use = egg:Paste#proxy
+address = http://localhost:5601
+
+[app:flask]
 use = egg:openprocurement_publicportal#public_portal_api
 filter-with = translogger
 
